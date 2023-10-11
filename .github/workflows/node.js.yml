@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "csye6225-wensun:main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "csye6225-wensun:main" ]
 
 env:
   DB_USER: root
