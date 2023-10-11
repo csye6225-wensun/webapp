@@ -9,7 +9,7 @@ function initDatabase() {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
-        password: ""
+        password: "r"
     });
 
     con.connect(function (err) {
