@@ -4,4 +4,7 @@
 npm install
 
 ## run
-node server.js
+npm run start
+
+## test
+npm test
