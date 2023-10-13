@@ -1,4 +1,6 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const health = require('./health');
 const db = require('./models');
 const auth = require('./auth');
@@ -8,6 +10,7 @@ const assignment = require('./assignment');
 const methodNotAllowed = (req, res, next) => res.status(405).send();
 
 const app = express();
+app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
@@ -19,7 +22,7 @@ app.route(`/healthz`)
     .get(health.getHealthz)
     .all(methodNotAllowed);
 
-app.route(`/v1/assignments/:id?`)
+app.route(`/v1/assignments/`)
     .get(auth.authentication(db), assignment.getAssignments(db))
     .post(auth.authentication(db), assignment.postAssignments(db))
     .delete(auth.authentication(db), assignment.delAssignmentByid(db))
