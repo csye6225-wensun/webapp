@@ -1,27 +1,9 @@
-const mysql = require('mysql');
 const fs = require("fs");
 const csv = require('csv-parser');
 const bcrypt = require("bcrypt");
 const getStream = require('get-stream');
 
 const saltRounds = 10;
-
-async function initDatabase() {
-    const con = mysql.createConnection({
-        host: "127.0.0.1",
-        user: "root",
-        password: "root"
-    });
-
-    await con.query("CREATE DATABASE assignment", function (err, result) {
-        if (err) {
-            console.log("Database existed!");
-            return;
-        };
-        console.log("Database created!");
-    });
-    await con.end();
-}
 
 async function initAccount(db) {
     const parser = fs.createReadStream('./opt/users.csv').pipe(csv())
@@ -48,6 +30,5 @@ async function initAccount(db) {
 }
 
 module.exports = {
-    initDatabase,
     initAccount
 };
