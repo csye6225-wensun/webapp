@@ -5,7 +5,6 @@ const init = require('../init');
 const server = app.listen(8080, () => { console.log('App is listening on port 8080.'); });
 
 beforeAll(async () => {
-    await init.initDatabase();
     await db.sequelize.sync();
     await init.initAccount(db);
 })
