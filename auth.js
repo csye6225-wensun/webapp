@@ -9,8 +9,8 @@ const authentication = (db) => {
         }
 
         try {
-            const authBuf = atob(authheader);
-            const auth = authBuf.split(' ')[1].split(':');
+            const authBase64 = authheader.split(' ')[1];
+            const auth = atob(authBase64).split(':');
             const email = auth[0];
             const password = auth[1];
             db.accounts.findOne({ where: { email: email } }).then((user) => {
