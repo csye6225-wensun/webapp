@@ -1,13 +1,9 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI
+name: CICD when merge
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 env:
   DB_USER: root
@@ -15,10 +11,8 @@ env:
   RESTORE: .test.sql
 
 jobs:
-  build:
-
+  integration_test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
@@ -47,3 +41,20 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm test
+
+  packer_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          packer_version: '1.9.4'
+
+      - name: Packer init
+        run: packer init aws-debian.pkr.hcl
+
+      - name: Packer build
+        run: packer build aws-debian.pkr.hcl
