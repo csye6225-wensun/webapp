@@ -23,10 +23,12 @@ jobs:
 
       - name: Packer fmt
         run: packer fmt aws-debian.pkr.hcl
-        continue-on-error: true
+
+      - name: Check Workflow Outcome
+        run: exit $(( if ${{ steps['Packer fmt'].conclusion }}))
 
       - name: Packer validate
         run: packer validate aws-debian.pkr.hcl
 
       - name: Check Workflow Outcome
-        run: exit $(( ${{ steps['Packer fmt'].conclusion }} + ${{ steps['Packer validate'].conclusion }} ))
+        run: exit $(( if eq(${{ steps['Packer validate'].conclusion }}, 'The configuration is valid.') ))
