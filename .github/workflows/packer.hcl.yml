@@ -2,7 +2,7 @@ name: Packer Check
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "" ]
 
 jobs:
   packer_check:
