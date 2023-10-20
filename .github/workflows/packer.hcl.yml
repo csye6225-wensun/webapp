@@ -1,0 +1,39 @@
+name: Packer Check
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  packer_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          packer_version: '1.9.4'
+
+      - name: Packer init
+        run: packer init aws-debian.pkr.hcl
+
+      - name: Packer fmt
+        run: |
+          echo "FMT_OUTPUT=$(packer fmt aws-debian.pkr.hcl)" >> $GITHUB_OUTPUT
+        id: fmt
+
+
+      - name: Check fmt output
+        run: exit $(( if ${{ steps.fmt.outputs.FMT_OUTPUT }}))
+
+      - name: Packer validate
+        run: |
+          echo "VAL_OUTPUT=$(packer validate aws-debian.pkr.hcl)" >> $GITHUB_OUTPUT
+        id: validate
+
+      - name: Check validate output
+        run: exit $(( ${{ steps.validate.outputs.VAL_OUTPUT == 'The configuration is valid.' }} ))
