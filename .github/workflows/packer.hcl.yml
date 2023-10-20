@@ -24,7 +24,7 @@ jobs:
       - name: Packer fmt
         run: |
           echo "FMT_OUTPUT=$(packer fmt aws-debian.pkr.hcl)" >> $GITHUB_OUTPUT
-          id: fmt
+        id: fmt
 
 
       - name: Check Workflow Outcome
@@ -33,7 +33,7 @@ jobs:
       - name: Packer validate
         run: |
           echo "VAL_OUTPUT=$(packer validate aws-debian.pkr.hcl)" >> $GITHUB_OUTPUT
-          id: validate
+        id: validate
 
       - name: Check Workflow Outcome
         run: exit $(( if ${{ steps.validate.outputs.VAL_OUTPUT }} ))
