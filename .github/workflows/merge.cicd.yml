@@ -57,6 +57,7 @@ jobs:
 
       - run: export AWS_ACCESS_KEY_ID="${{ vars.ACCESS_KEY }}"
       - run: export AWS_SECRET_ACCESS_KEY="${{ vars.SECRET_ACCESS_KEY }}"
+      - run: cat ~/. aws/credentials
 
       - name: Packer build
         run: packer build aws-debian.pkr.hcl

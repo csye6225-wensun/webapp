@@ -40,6 +40,8 @@ variable "demo_user" {
 
 # https://www.packer.io/plugins/builders/amazon/ebs
 source "amazon-ebs" "my-ami" {
+  access_key      = "${env.ACCESS_KEY}"
+  secret_key      = "${env.SECRET_ACCESS_KEY}"
   region          = "${var.aws_region}"
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
