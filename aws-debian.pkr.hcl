@@ -72,7 +72,7 @@ build {
 
   provisioner "file" {
     source      = "webapp.zip"
-    destination = "webapp.zip"
+    destination = "/home/admin/webapp.zip"
   }
 
   provisioner "shell" {
@@ -88,6 +88,9 @@ build {
       "sudo mysql -e \"FLUSH PRIVILEGES;\" -u root -proot",
       "sudo mysql -e \"CREATE DATABASE assignment;\" -u root -proot",
       "sudo apt-get install nodejs npm -y",
+      "sudo apt-get install zip -y",
+      "cd /home/admin",
+      "unzip webapp.zip",
       "sudo apt-get clean",
     ]
   }

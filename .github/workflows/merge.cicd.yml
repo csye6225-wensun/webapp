@@ -42,7 +42,6 @@ jobs:
     - run: npm ci
     #- run: npm test
     - run: zip -r webapp.zip .
-    - run: ls
 
     - name: Setup Packer
       uses: hashicorp/setup-packer@main
@@ -58,8 +57,6 @@ jobs:
 
     - name: Packer init
       run: packer init aws-debian.pkr.hcl
-
-    - run: ls
 
     - name: Packer build
       run: packer build aws-debian.pkr.hcl
