@@ -52,11 +52,18 @@ jobs:
         with:
           packer_version: '1.9.4'
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-1
+
       - name: Packer init
         run: packer init aws-debian.pkr.hcl
 
       #- run: export AWS_ACCESS_KEY_ID="${{ vars.ACCESS_KEY }}"
       #- run: export AWS_SECRET_ACCESS_KEY="${{ vars.SECRET_ACCESS_KEY }}"
       - run: printenv
-      #- name: Packer build
-      #  run: packer build aws-debian.pkr.hcl
+      - name: Packer build
+        run: packer build aws-debian.pkr.hcl
