@@ -36,4 +36,4 @@ jobs:
         id: validate
 
       - name: Check Workflow Outcome
-        run: exit $(( if ${{ steps.validate.outputs.VAL_OUTPUT == 'The configuration is valid.' }} ))
+        run: exit $(( ${{ steps.validate.outputs.VAL_OUTPUT == 'The configuration is valid.' }} ))
