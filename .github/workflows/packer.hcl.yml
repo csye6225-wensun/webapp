@@ -31,4 +31,4 @@ jobs:
         run: packer validate aws-debian.pkr.hcl
 
       - name: Check Workflow Outcome
-        run: exit $(( if eq(${{ steps['Packer validate'].conclusion }}, 'The configuration is valid.') ))
+        run: exit $(( if${{ steps['Packer validate'].conclusion }} ))
