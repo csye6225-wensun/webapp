@@ -39,29 +39,27 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    #- run: npm ci
+    - run: npm ci
     #- run: npm test
+    - run: zip -r webapp.zip .
 
-  packer_build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+    - name: Check out code
+      uses: actions/checkout@v2
 
-      - name: Setup Packer
-        uses: hashicorp/setup-packer@main
-        with:
-          packer_version: '1.9.4'
+    - name: Setup Packer
+      uses: hashicorp/setup-packer@main
+      with:
+        packer_version: '1.9.4'
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-1
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-1
 
-      - name: Packer init
-        run: packer init aws-debian.pkr.hcl
+    - name: Packer init
+      run: packer init aws-debian.pkr.hcl
 
-      - name: Packer build
-        run: packer build aws-debian.pkr.hcl
+    - name: Packer build
+      run: packer build aws-debian.pkr.hcl
