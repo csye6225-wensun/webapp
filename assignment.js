@@ -2,10 +2,6 @@ const { assignments } = require("./models");
 
 const getAssignments = (db) => {
     return (req, res) => {
-        const body = req.body;
-        if (body.id) {
-            return getAssignmentByid(req, res, db);
-        }
         db.assignments.findAll({
             attributes: ['id', 'name', 'points', 'num_of_attemps', 'deadline', 'assignment_created', 'assignment_updated']
         }).then((assignments) => {
@@ -37,33 +33,34 @@ const postAssignments = (db) => {
     }
 };
 
-const getAssignmentByid = (req, res, db) => {
-    const body = req.body;
-    db.assignments.findOne({
-        where: { id: body.id }
-    }).then((assignment) => {
-        if (!assignment) {
-            return res.status(404).json();
-        }
-        if (assignment.onwer != req.userid) {
-            return res.status(403).json();
-        } else {
-            return res.status(200).json(assignment);
-        }
-    }).catch((err) => {
-        return res.status(400).json();
-    });
+const getAssignmentByid = (db) => {
+    return (req, res) => {
+        db.assignments.findOne({
+            where: { id: req.params.id }
+        }).then((assignment) => {
+            if (!assignment) {
+                return res.status(404).json();
+            }
+            if (assignment.onwer != req.userid) {
+                return res.status(403).json();
+            } else {
+                return res.status(200).json(assignment);
+            }
+        }).catch((err) => {
+            return res.status(400).json();
+        });
+    }
 };
 
 const delAssignmentByid = (db) => {
     return (req, res) => {
         const body = req.body;
 
-        if (!body.id) {
+        if (!req.params.id) {
             return res.status(404).json();
         }
         db.assignments.findOne({
-            where: { id: body.id }
+            where: { id: req.params.id }
         }).then((assignment) => {
             if (!assignment) {
                 return res.status(404).json();
@@ -72,7 +69,7 @@ const delAssignmentByid = (db) => {
                 return res.status(403).json();
             } else {
                 db.assignments.destroy({
-                    where: { id: body.id }
+                    where: { id: req.params.id }
                 }).then(() => {
                     return res.status(204).json();
                 }).catch((err) => {
@@ -88,12 +85,11 @@ const delAssignmentByid = (db) => {
 const putAssignmentByid = (db) => {
     return (req, res) => {
         const body = req.body;
-
-        if (!body.id) {
+        if (!req.params.id) {
             return res.status(404).json();
         }
         db.assignments.findOne({
-            where: { id: body.id }
+            where: { id: req.params.id }
         }).then((assignment) => {
             if (!assignment) {
                 return res.status(404).json();
@@ -108,7 +104,7 @@ const putAssignmentByid = (db) => {
                     deadline: body.deadline,
                 },
                     {
-                        where: { id: body.id }
+                        where: { id: req.params.id }
                     }).then(() => {
                         return res.status(204).json();
                     }).catch((err) => {
@@ -123,6 +119,7 @@ const putAssignmentByid = (db) => {
 
 module.exports = {
     getAssignments,
+    getAssignmentByid,
     postAssignments,
     delAssignmentByid,
     putAssignmentByid
