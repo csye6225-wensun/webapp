@@ -78,10 +78,6 @@ build {
     inline = [
       "sudo apt-get update -y",
       "sudo apt-get upgrade -y",
-      "sudo apt install default-mysql-server",
-      "sudo mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';\" -u root",
-      "sudo mysql -e \"CREATE DATABASE assignment;\" -u root -p root",
-      "sudo apt install nodejs npm -y",
       "sudo apt-get clean",
     ]
   }
