@@ -79,6 +79,8 @@ build {
       "sudo apt-get update -y",
       "sudo apt-get upgrade -y",
       "sudo apt-get install default-mysql-server -y",
+      "sudo mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';\" -u root",
+      "sudo mysql -e \"CREATE DATABASE assignment;\" -u root -p root",
       "sudo apt-get install nodejs npm -y",
       "sudo apt-get clean",
     ]
