@@ -37,6 +37,11 @@ variable "profile" {
   default = "dev"
 }
 
+variable "demo_user" {
+  type    = string
+  default = "656825459572"
+}
+
 # https://www.packer.io/plugins/builders/amazon/ebs
 source "amazon-ebs" "my-ami" {
   profile         = "${var.profile}"
@@ -44,7 +49,10 @@ source "amazon-ebs" "my-ami" {
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
   ami_regions = [
-    "us-west-1",
+    "${var.aws_region}",
+  ]
+  ami_users = [
+    "${var.demo_user}",
   ]
 
   aws_polling {
@@ -59,7 +67,7 @@ source "amazon-ebs" "my-ami" {
 
   launch_block_device_mappings {
     delete_on_termination = true
-    device_name           = "/dev/sda1"
+    device_name           = "/dev/sdf"
     volume_size           = 8
     volume_type           = "gp2"
   }
@@ -74,8 +82,12 @@ build {
       "CHECKPOINT_DISABLE=1"
     ]
     inline = [
-      "sudo apt-get update",
+      "sudo apt-get update -y",
       "sudo apt-get upgrade -y",
+      "sudo apt install default-mysql-server",
+      "sudo mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';\" -u root",
+      "sudo mysql -e \"CREATE DATABASE assignment;\" -u root -p root",
+      "sudo apt install nodejs npm -y",
       "sudo apt-get clean",
     ]
   }
