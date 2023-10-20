@@ -78,6 +78,8 @@ build {
     inline = [
       "sudo apt-get update -y",
       "sudo apt-get upgrade -y",
+      "sudo apt install default-mysql-server",
+      "sudo apt install nodejs npm -y",
       "sudo apt-get clean",
     ]
   }
