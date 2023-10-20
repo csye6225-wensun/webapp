@@ -25,6 +25,10 @@ app.route(`/healthz`)
 app.route(`/v1/assignments/`)
     .get(auth.authentication(db), assignment.getAssignments(db))
     .post(auth.authentication(db), assignment.postAssignments(db))
+    .all(methodNotAllowed);
+
+app.route(`/v1/assignments/:id`)
+    .get(auth.authentication(db), assignment.getAssignmentByid(db))
     .delete(auth.authentication(db), assignment.delAssignmentByid(db))
     .put(auth.authentication(db), assignment.putAssignmentByid(db))
     .all(methodNotAllowed);
