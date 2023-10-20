@@ -22,13 +22,18 @@ jobs:
         run: packer init aws-debian.pkr.hcl
 
       - name: Packer fmt
-        run: packer fmt aws-debian.pkr.hcl
+        run: |
+          echo "FMT_OUTPUT=$(packer fmt aws-debian.pkr.hcl)" >> $GITHUB_OUTPUT
+          id: fmt
+
 
       - name: Check Workflow Outcome
-        run: exit $(( if ${{ steps['Packer fmt'].conclusion }}))
+        run: exit $(( if ${{ steps.fmt.outputs.FMT_OUTPUT }}))
 
       - name: Packer validate
-        run: packer validate aws-debian.pkr.hcl
+        run: |
+          echo "VAL_OUTPUT=$(packer validate aws-debian.pkr.hcl)" >> $GITHUB_OUTPUT
+          id: validate
 
       - name: Check Workflow Outcome
-        run: exit $(( if${{ steps['Packer validate'].conclusion }} ))
+        run: exit $(( if ${{ steps.validate.outputs.VAL_OUTPUT }} ))
