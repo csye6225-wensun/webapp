@@ -1,8 +1,8 @@
 name: Packer Check
 
-on:
-  pull_request:
-    branches: [ "" ]
+#on:
+ # pull_request:
+  #  branches: [ "main" ]
 
 jobs:
   packer_check:
