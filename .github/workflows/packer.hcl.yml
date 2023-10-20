@@ -27,7 +27,7 @@ jobs:
         id: fmt
 
 
-      - name: Check Workflow Outcome
+      - name: Check fmt output
         run: exit $(( if ${{ steps.fmt.outputs.FMT_OUTPUT }}))
 
       - name: Packer validate
@@ -35,5 +35,5 @@ jobs:
           echo "VAL_OUTPUT=$(packer validate aws-debian.pkr.hcl)" >> $GITHUB_OUTPUT
         id: validate
 
-      - name: Check Workflow Outcome
+      - name: Check validate output
         run: exit $(( ${{ steps.validate.outputs.VAL_OUTPUT == 'The configuration is valid.' }} ))

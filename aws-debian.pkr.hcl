@@ -69,7 +69,7 @@ source "amazon-ebs" "my-ami" {
     delete_on_termination = true
     device_name           = "/dev/sdf"
     volume_size           = 8
-    volume_type           = "gp2"
+    volume_type = "gp2"
   }
 }
 
