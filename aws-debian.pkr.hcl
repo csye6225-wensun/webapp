@@ -32,10 +32,6 @@ variable "subnet_id" {
   default = "subnet-054a885756c2f1089"
 }
 
-variable "profile" {
-  type    = string
-  default = "dev"
-}
 
 variable "demo_user" {
   type    = string
@@ -44,8 +40,6 @@ variable "demo_user" {
 
 # https://www.packer.io/plugins/builders/amazon/ebs
 source "amazon-ebs" "my-ami" {
-  profile         = "${var.profile}"
-  region          = "${var.aws_region}"
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
   ami_regions = [
@@ -76,6 +70,11 @@ source "amazon-ebs" "my-ami" {
 build {
   sources = ["source.amazon-ebs.my-ami"]
 
+  provisioner "file" {
+    source      = "webapp.zip"
+    destination = "/home/admin/webapp.zip"
+  }
+
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
@@ -84,10 +83,14 @@ build {
     inline = [
       "sudo apt-get update -y",
       "sudo apt-get upgrade -y",
-      "sudo apt install default-mysql-server",
-      "sudo mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';\" -u root",
-      "sudo mysql -e \"CREATE DATABASE assignment;\" -u root -p root",
-      "sudo apt install nodejs npm -y",
+      "sudo apt-get install default-mysql-server -y",
+      "sudo mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';\" -u root",
+      "sudo mysql -e \"FLUSH PRIVILEGES;\" -u root -proot",
+      "sudo mysql -e \"CREATE DATABASE assignment;\" -u root -proot",
+      "sudo apt-get install nodejs npm -y",
+      "sudo apt-get install zip -y",
+      "cd /home/admin",
+      "unzip webapp.zip",
       "sudo apt-get clean",
     ]
   }
