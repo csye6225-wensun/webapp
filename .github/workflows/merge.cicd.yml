@@ -1,7 +1,7 @@
 name: CICD when merge
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
 
 env:
@@ -40,7 +40,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    #- run: npm test
+    - run: npm test
+    
     - run: zip -r webapp.zip .
 
     - name: Setup Packer
