@@ -42,7 +42,7 @@ jobs:
     - run: npm ci
     - run: npm test
 
-    - run: zip -r ../webapp.zip .
+    - run: zip -r webapp.zip .
 
     - name: Setup Packer
       uses: hashicorp/setup-packer@main
