@@ -11,7 +11,7 @@ env:
   RESTORE: .test.sql
 
 jobs:
-  integration_test:
+  integration_test_and_packer_build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -41,7 +41,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm test
-    
+
     - run: zip -r webapp.zip .
 
     - name: Setup Packer
