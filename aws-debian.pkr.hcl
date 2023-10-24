@@ -92,5 +92,6 @@ build {
       "cd /home/admin",
       "unzip webapp.zip",
       "sudo apt-get clean",
+    ]
   }
 }
