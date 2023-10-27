@@ -1,0 +1,15 @@
+[Unit]
+Description=CSYE6225 Web Application
+After=cloud-init.service
+
+[Service]
+ExecStart=/usr/bin/node /home/admin/server.js
+WorkingDirectory=/home/admin
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=my-node-app
+User=csye6225
+
+[Install]
+WantedBy=multi-user.target
