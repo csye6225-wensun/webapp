@@ -1,11 +1,10 @@
 const Sequelize = require('sequelize');
 
-const dbconfig = require('./config/db.config');
-
 async function getHealthz(req, res) {
-    const sequelize = new Sequelize(dbconfig.db, dbconfig.user, dbconfig.password, {
-        host: dbconfig.host,
-        dialect: dbconfig.dialect
+    const sequelize = new Sequelize(process.env.DATABASE_DB, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
+        host: process.env.DATABASE_HOST,
+        dialect: process.env.DATABASE_DIALECT,
+        logging: false
     });
 
     try {

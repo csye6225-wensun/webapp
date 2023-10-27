@@ -32,6 +32,14 @@ jobs:
       run: |
           mysql -e "CREATE DATABASE assignment;" \
           -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+    
+    - name: Create env file
+      run: |
+          echo "DATABASE_HOST=${{ env.DB_HOST }}
+                DATABASE_USER=${{ env.DB_USER }}
+                DATABASE_PASSWORD=${{ env.DB_PASSWORD }}
+                DATABASE_DB=${{ env.DB_DATABASE }}
+                DATABASE_DIALECT=mysql" > /opt/.env
 
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
