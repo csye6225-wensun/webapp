@@ -90,7 +90,7 @@ build {
       "sudo groupadd csye6225",
       "sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225",
       "sudo cp csye6225.service /etc/systemd/system",
-      "systemctl daemon-reload",
+      "sudo systemctl daemon-reload",
       "sudo systemctl enable csye6225",
       "sudo apt-get clean",
     ]
