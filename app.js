@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const dotenv = require('dotenv');
+dotenv.config({ path: '/opt/.env' });
+
 const health = require('./health');
 const db = require('./models');
 const auth = require('./auth');
