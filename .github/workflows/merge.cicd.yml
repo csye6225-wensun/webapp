@@ -6,8 +6,10 @@ on:
 
 env:
   PACKER_LOG: 1
+  DB_HOST: 127.0.0.1
   DB_USER: root
   DB_PASSWORD: root
+  DB_DATABASE: assignment
   RESTORE: .test.sql
 
 jobs:
