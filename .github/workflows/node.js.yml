@@ -15,10 +15,8 @@ env:
   RESTORE: .test.sql
 
 jobs:
-  build:
-
+  integration_test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [16.x]
