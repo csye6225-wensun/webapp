@@ -1,0 +1,9 @@
+{
+    "agent": {
+        "metrics_collection_interval": 60,
+        "region": "us-west-1",
+        "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log",
+        "debug": false,
+        "run_as_user": "cwagent"
+    }
+}
