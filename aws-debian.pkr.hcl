@@ -98,6 +98,7 @@ build {
       "sudo dpkg -i -E ./amazon-cloudwatch-agent.deb",
       "sudo systemctl enable amazon-cloudwatch-agent",
       "sudo systemctl start amazon-cloudwatch-agent",
+      "sudo cp opt/amazon-cloudwatch-agent.json /opt",
     ]
   }
 }
