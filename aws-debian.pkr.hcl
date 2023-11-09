@@ -85,11 +85,6 @@ build {
       "sudo apt-get upgrade -y",
       "sudo apt-get install nodejs npm -y",
       "sudo apt-get install zip -y",
-      "wget https://amazoncloudwatch-agent.s3.amazonaws.com/debian/amd64/latest/amazon-cloudwatch-agent.deb",
-      "sudo dpkg -i -E ./amazon-cloudwatch-agent.deb",
-      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard",
-      "sudo systemctl start amazon-cloudwatch-agent",
-      "sudo systemctl enable amazon-cloudwatch-agent",
       "cd /home/admin",
       "unzip webapp.zip",
       "sudo groupadd csye6225",
@@ -99,6 +94,10 @@ build {
       "sudo systemctl enable csye6225",
       "sudo systemctl start csye6225",
       "sudo apt-get clean",
+      "wget https://amazoncloudwatch-agent.s3.amazonaws.com/debian/amd64/latest/amazon-cloudwatch-agent.deb",
+      "sudo dpkg -i -E ./amazon-cloudwatch-agent.deb",
+      "sudo systemctl enable amazon-cloudwatch-agent",
+      "sudo systemctl start amazon-cloudwatch-agent",
     ]
   }
 }
