@@ -2,6 +2,7 @@ const fs = require("fs");
 const csv = require('csv-parser');
 const bcrypt = require("bcrypt");
 const getStream = require('get-stream');
+const { logger, } = require('./logger');
 
 const saltRounds = 10;
 
@@ -24,7 +25,7 @@ async function initAccount(db) {
             account_created: d.toString(),
             account_updated: d.toString()
         }).catch(err => {
-            console.log(row.email + " already exist");
+            logger.info(row.email + " already exist");
         });
     }
 }
