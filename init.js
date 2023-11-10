@@ -2,7 +2,7 @@ const fs = require("fs");
 const csv = require('csv-parser');
 const bcrypt = require("bcrypt");
 const getStream = require('get-stream');
-const { logger, } = require('./logger');
+const logger = require('./logger');
 
 const saltRounds = 10;
 

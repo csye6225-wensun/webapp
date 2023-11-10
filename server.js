@@ -1,6 +1,6 @@
 const { app, db } = require('./app');
 const init = require('./init');
-const { logger, } = require('./logger');
+const logger = require('./logger');
 
 app.listen(8080, async () => {
     await db.sequelize.sync();
