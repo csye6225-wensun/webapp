@@ -1,6 +1,6 @@
 [Unit]
 Description=CSYE6225 Web Application
-After=cloud-init.target
+After=cloud-init.service
 
 [Service]
 ExecStart=/usr/bin/node /home/admin/server.js
