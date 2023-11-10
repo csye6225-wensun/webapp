@@ -36,8 +36,4 @@ app.route(`/v1/assignments/:id`)
     .put(auth.authentication(db), assignment.putAssignmentByid(db))
     .all(methodNotAllowed);
 
-app.init = async () => {
-
-};
-
 module.exports = { app, db }

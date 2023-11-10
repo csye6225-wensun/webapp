@@ -1,4 +1,5 @@
 const { assignments } = require("./models");
+const { logger, } = require('./logger');
 
 const getAssignments = (db) => {
     return (req, res) => {
@@ -7,6 +8,7 @@ const getAssignments = (db) => {
         }).then((assignments) => {
             return res.status(200).json(assignments);
         }).catch((err) => {
+            logger.error(err);
             return res.status(400).json();
         });
     }
@@ -28,6 +30,7 @@ const postAssignments = (db) => {
         }).then(assignment => {
             return res.status(201).json(assignment);
         }).catch(err => {
+            logger.error(err);
             return res.status(400).json();
         });
     }
@@ -39,14 +42,17 @@ const getAssignmentByid = (db) => {
             where: { id: req.params.id }
         }).then((assignment) => {
             if (!assignment) {
+                logger.info(`Can't find assignment ${req.params.id}`);
                 return res.status(404).json();
             }
             if (assignment.onwer != req.userid) {
+                logger.info(`Not the assignment (${req.params.id}) owner (${req.userid})`);
                 return res.status(403).json();
             } else {
                 return res.status(200).json(assignment);
             }
         }).catch((err) => {
+            logger.error(err);
             return res.status(400).json();
         });
     }
@@ -57,15 +63,18 @@ const delAssignmentByid = (db) => {
         const body = req.body;
 
         if (!req.params.id) {
+            logger.info(`Don't have a assignment id`);
             return res.status(404).json();
         }
         db.assignments.findOne({
             where: { id: req.params.id }
         }).then((assignment) => {
             if (!assignment) {
+                logger.info(`Can't find assignment ${req.params.id}`);
                 return res.status(404).json();
             }
             if (assignment.onwer != req.userid) {
+                logger.info(`Not the assignment (${req.params.id}) owner (${req.userid})`);
                 return res.status(403).json();
             } else {
                 db.assignments.destroy({
@@ -73,10 +82,12 @@ const delAssignmentByid = (db) => {
                 }).then(() => {
                     return res.status(204).json();
                 }).catch((err) => {
+                    logger.error(err);
                     return res.status(400).json();
                 });
             }
         }).catch((err) => {
+            logger.error(err);
             return res.status(400).json();
         });
     }
@@ -86,15 +97,18 @@ const putAssignmentByid = (db) => {
     return (req, res) => {
         const body = req.body;
         if (!req.params.id) {
+            logger.info(`Don't have a assignment id`);
             return res.status(404).json();
         }
         db.assignments.findOne({
             where: { id: req.params.id }
         }).then((assignment) => {
             if (!assignment) {
+                logger.info(`Can't find assignment ${req.params.id}`);
                 return res.status(404).json();
             }
             if (assignment.onwer != req.userid) {
+                logger.info(`Not the assignment (${req.params.id}) owner (${req.userid})`);
                 return res.status(403).json();
             } else {
                 db.assignments.update({
@@ -108,10 +122,12 @@ const putAssignmentByid = (db) => {
                     }).then(() => {
                         return res.status(204).json();
                     }).catch((err) => {
+                        logger.error(err);
                         return res.status(400).json();
                     });
             }
         }).catch((err) => {
+            logger.error(err);
             return res.status(400).json();
         });
     }
