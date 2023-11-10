@@ -1,5 +1,5 @@
 const { assignments } = require("./models");
-const { logger, } = require('./logger');
+const logger = require('./logger');
 
 const getAssignments = (db) => {
     return (req, res) => {
