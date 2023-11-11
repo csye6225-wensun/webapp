@@ -1,5 +1,5 @@
 const request = require('supertest')
-const { app, db } = require('../app')
+const { app, db, statsd } = require('../app')
 const init = require('../init');
 
 const server = app.listen(8080, () => { console.log('App is listening on port 8080.'); });
@@ -10,6 +10,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
+    await statsd.closeStatsDClient();
     await db.sequelize.close();
     await server.close();
 });

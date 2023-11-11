@@ -48,4 +48,4 @@ app.route(`/v1/assignments/:id`)
     .put(auth.authentication(db), assignment.putAssignmentByid(db))
     .all(methodNotAllowed);
 
-module.exports = { app, db }
+module.exports = { app, db, statsd }

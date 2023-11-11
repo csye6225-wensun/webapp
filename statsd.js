@@ -5,4 +5,8 @@ function countAPICalls(method, url) {
     statsDClient.increment(`Count of Api calls (${method} ${url})`);
 }
 
-module.exports = { countAPICalls };
+async function closeStatsDClient() {
+    await statsDClient.close();
+}
+
+module.exports = { countAPICalls, closeStatsDClient };
