@@ -8,6 +8,7 @@ const health = require('./health');
 const db = require('./models');
 const auth = require('./auth');
 const assignment = require('./assignment');
+const statsd = require('./statsd');
 
 // Method Not Allowed
 const methodNotAllowed = (req, res, next) => res.status(405).send();
@@ -18,6 +19,17 @@ app.use(bodyParser.json());
 app.use(function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+
+    const method = req.method;
+    let url = req.originalUrl;
+    const urlArray = url.split("/");
+    if (urlArray.length === 4 && urlArray[2] === "assignments") {
+        url = `/${urlArray[1]}/${urlArray[2]}/id`
+    }
+    const collectApis = ["healthz", "v1"];
+    if (urlArray.length > 1 && collectApis.includes(urlArray[1])) {
+        statsd.countAPICalls(method, url);
+    }
     next();
 });
 
@@ -36,4 +48,4 @@ app.route(`/v1/assignments/:id`)
     .put(auth.authentication(db), assignment.putAssignmentByid(db))
     .all(methodNotAllowed);
 
-module.exports = { app, db }
+module.exports = { app, db, statsd }

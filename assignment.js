@@ -1,4 +1,3 @@
-const { assignments } = require("./models");
 const logger = require('./logger');
 
 const getAssignments = (db) => {
