@@ -15,5 +15,6 @@ const models = require('./model')(sequelize, Sequelize);
 
 db.accounts = models.Account;
 db.assignments = models.Assignment;
+db.submissions = models.Submission;
 
 module.exports = db;
