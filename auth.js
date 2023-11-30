@@ -29,6 +29,7 @@ const authentication = (db) => {
                         return res.status(401).json();
                     } else {
                         req.userid = user.id;
+                        req.userEmail = user.email;
                         next();
                     }
                 });

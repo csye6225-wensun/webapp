@@ -17,15 +17,10 @@ module.exports = (sequelize, Sequelize) => {
         email: {
             type: Sequelize.STRING,
             unique: true
-        },
-        createdAt: {
-            type: Sequelize.DATE,
-            field: 'account_created',
-        },
-        updatedAt: {
-            type: Sequelize.DATE,
-            field: 'account_updated',
         }
+    }, {
+        createdAt: 'account_created',
+        updatedAt: 'account_updated'
     });
 
     const Assignment = sequelize.define("assignment", {
@@ -53,17 +48,32 @@ module.exports = (sequelize, Sequelize) => {
         },
         deadline: {
             type: Sequelize.STRING
-        },
-        createdAt: {
-            type: Sequelize.DATE,
-            field: 'assignment_created',
-        },
-        updatedAt: {
-            type: Sequelize.DATE,
-            field: 'assignment_updated',
         }
+    }, {
+        createdAt: 'assignment_created',
+        updatedAt: 'assignment_updated'
     });
 
-    Account.hasMany(Assignment, { foreignKey: 'onwer' });
-    return { Account, Assignment };
+    const Submission = sequelize.define("submission", {
+        id: {
+            type: Sequelize.UUID,
+            defaultValue: Sequelize.UUIDV4,
+            primaryKey: true,
+        },
+        submission_url: {
+            type: Sequelize.STRING
+        },
+        user_id: {
+            type: Sequelize.STRING
+        },
+        assignment_id: {
+            type: Sequelize.STRING
+        }
+    }, {
+        createdAt: 'submission_date',
+        updatedAt: 'submission_updated'
+    });
+
+    Account.hasMany(Assignment, { foreignKey: 'owner' });
+    return { Account, Assignment, Submission };
 };
