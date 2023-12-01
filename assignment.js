@@ -174,6 +174,7 @@ const postSubmissions = (db) => {
             });
 
             const snsMessage = JSON.stringify({
+                "id": newSubmission.id,
                 "email": req.userEmail,
                 "submission_url": body.submission_url
             });

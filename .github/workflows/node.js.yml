@@ -44,7 +44,9 @@ jobs:
                 DATABASE_DB=${{ env.DB_DATABASE }}
                 DATABASE_DIALECT=mysql
                 LOG_LEVEL=debug
-                LOG_FILE_PATH=logs/webapp.log" > /opt/.env
+                LOG_FILE_PATH=logs/webapp.log
+                REGION=none
+                SNS_ARN=arn:aws:sns:us-west-1:656825459572:dev" > /opt/.env
 
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
