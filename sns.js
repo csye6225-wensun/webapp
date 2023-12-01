@@ -3,24 +3,23 @@ const { SNSClient, PublishCommand } = require('@aws-sdk/client-sns');
 const logger = require('./logger');
 
 const snsClient = new SNSClient({ region: process.env.REGION });
-const topicArn = process.env.SNS_ARN;
 
-function publishToSNS(message) {
+async function publishToSNS(message) {
     if (process.env.REGION == "none") {
         return;
     }
-    const command = new PublishCommand({
-        TopicArn: topicArn,
-        Message: message,
-    });
 
-    snsClient.send(command)
-        .then((data) => {
-            logger.info(`Message (${message}) published successfully: ${data}`);
-        })
-        .catch((err) => {
-            logger.error(err);
-        });
+    try {
+        const response = await snsClient.send(
+            new PublishCommand({
+                Message: message,
+                TopicArn: process.env.SNS_ARN,
+            }),
+        );
+        logger.info(`Message (${message}) TopicArn (${process.env.SNS_ARN}) published successfully: `, response);
+    } catch (err) {
+        logger.error("Publish to SNS fail: ", err);
+    }
 }
 
 module.exports = {
