@@ -76,9 +76,9 @@ jobs:
       run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
           echo "AWS Account ID: $ACCOUNT_ID"
-          echo "::set-output name=account_id::$ACCOUNT_ID"
+          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
 
     - name: Get shared images
       run: |
-          ACCOUNT_ID=${{ steps.get-account-id.outputs.account_id }}
+          ACCOUNT_ID=$ACCOUNT_ID
           aws ec2 describe-images --executable-users $ACCOUNT_ID
