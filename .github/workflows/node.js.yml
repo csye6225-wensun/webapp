@@ -71,6 +71,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEMO }}
         aws-region: us-west-1
     
+    - name: Get AWS demo account id
+      run: |
+          accout_id=$(aws sts get-caller-identity --query 'Account' --output text)
+
     - name: Get shared images
       run: |
-          aws ec2 describe-images --executable-users all
+          aws ec2 describe-images --executable-users $accout_id
