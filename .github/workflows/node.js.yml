@@ -72,6 +72,7 @@ jobs:
         aws-region: us-west-1
     
     - name: Get AWS demo account id
+      id: get-account-id
       run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
           echo "AWS Account ID: $ACCOUNT_ID"
