@@ -56,14 +56,15 @@ jobs:
     - run: npm ci
     - run: npm test
 
-    - run: zip -r webapp.zip .
+    - name: Zip Webapp
+      run: zip -r webapp.zip .
 
     - name: Setup Packer
       uses: hashicorp/setup-packer@main
       with:
         packer_version: '1.9.4'
 
-    - name: Configure AWS Credentials
+    - name: Configure AWS Credentials 1
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -75,3 +76,60 @@ jobs:
 
     - name: Packer build
       run: packer build aws-debian.pkr.hcl
+
+    - name: Configure AWS Credentials 2
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEMO }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEMO }}
+        aws-region: us-west-1
+    
+    - name: Get AWS demo account id
+      run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+          echo "AWS Account ID: $ACCOUNT_ID"
+          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
+
+    - name: Get shared images
+      run: |
+          ACCOUNT_ID=$ACCOUNT_ID
+          IMAGE_ID=$(aws ec2 describe-images --executable-users $ACCOUNT_ID --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' --output text)
+          echo "Latest AMI ID: $IMAGE_ID"
+          echo "LATEST_AMI_ID=$IMAGE_ID" >> $GITHUB_ENV
+    
+    - name: Get auto scaling group name
+      run: |
+          AUTO_SCALING_GROUP_NAME=$(aws autoscaling describe-auto-scaling-groups --query "AutoScalingGroups[0].AutoScalingGroupName" --output text)
+          echo "Auto scaling group name: $AUTO_SCALING_GROUP_NAME"
+          echo "AUTO_SCALING_GROUP_NAME=$AUTO_SCALING_GROUP_NAME" >> $GITHUB_ENV
+
+    - name: Get launch template id
+      run: |
+          AUTO_SCALING_GROUP_NAME=$AUTO_SCALING_GROUP_NAME
+          LAUNCH_TEMPLATE_ID=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names $AUTO_SCALING_GROUP_NAME --query "AutoScalingGroups[0].LaunchTemplate.LaunchTemplateId" --output text)
+          LAUNCH_TEMPLATE_VERSION=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names $AUTO_SCALING_GROUP_NAME --query "AutoScalingGroups[0].LaunchTemplate.Version" --output text)
+          echo "Launch Template ID: $LAUNCH_TEMPLATE_ID"
+          echo "LAUNCH_TEMPLATE_ID=$LAUNCH_TEMPLATE_ID" >> $GITHUB_ENV
+
+    - name: Create a new Launch Template version
+      run: |
+          LAUNCH_TEMPLATE_ID=$LAUNCH_TEMPLATE_ID
+          LATEST_AMI_ID=$LATEST_AMI_ID
+          aws ec2 create-launch-template-version --launch-template-id $LAUNCH_TEMPLATE_ID --version-description "Launch Template new version" --source-version 1 --launch-template-data "ImageId=$LATEST_AMI_ID"
+    
+    - name: Trigger auto scaling group instance refresh
+      run: |
+          AUTO_SCALING_GROUP_NAME=$AUTO_SCALING_GROUP_NAME
+          aws autoscaling start-instance-refresh --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME
+
+    - name: Wait for ASG Instance Refresh
+      run: |
+          AUTO_SCALING_GROUP_NAME=$AUTO_SCALING_GROUP_NAME
+          while [[ "$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME --query 'InstanceRefreshes[0].Status' --output text)" != "Successful" ]]; do
+            echo "Waiting for instance refresh to complete..."
+            sleep 30
+          done
+
+    - name: Display ASG instance refresh status
+      run: |
+          echo "Instance refresh completed successfully!"
