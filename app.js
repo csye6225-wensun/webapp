@@ -26,7 +26,7 @@ app.use(function (req, res, next) {
     if (urlArray.length === 4 && urlArray[2] === "assignments") {
         url = `/${urlArray[1]}/${urlArray[2]}/id`
     }
-    const collectApis = ["healthz", "v1"];
+    const collectApis = ["healthz", "v1", "v2"];
     if (urlArray.length > 1 && collectApis.includes(urlArray[1])) {
         statsd.countAPICalls(method, url);
     }
@@ -37,7 +37,7 @@ app.route(`/healthz`)
     .get(health.getHealthz)
     .all(methodNotAllowed);
 
-app.route(`/v1/assignments/`)
+app.route(`/v2/assignments/`)
     .get(auth.authentication(db), assignment.getAssignments(db))
     .post(auth.authentication(db), assignment.postAssignments(db))
     .all(methodNotAllowed);

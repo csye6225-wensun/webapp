@@ -94,6 +94,7 @@ jobs:
       run: |
           AUTO_SCALING_GROUP_NAME=$AUTO_SCALING_GROUP_NAME
           LAUNCH_TEMPLATE_ID=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names $AUTO_SCALING_GROUP_NAME --query "AutoScalingGroups[0].LaunchTemplate.LaunchTemplateId" --output text)
+          LAUNCH_TEMPLATE_VERSION=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names $AUTO_SCALING_GROUP_NAME --query "AutoScalingGroups[0].LaunchTemplate.Version" --output text)
           echo "Launch Template ID: $LAUNCH_TEMPLATE_ID"
           echo "LAUNCH_TEMPLATE_ID=$LAUNCH_TEMPLATE_ID" >> $GITHUB_ENV
 
@@ -108,7 +109,14 @@ jobs:
           AUTO_SCALING_GROUP_NAME=$AUTO_SCALING_GROUP_NAME
           aws autoscaling start-instance-refresh --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME
 
-    - name: Wait for Instance Refresh
+    - name: Wait for ASG Instance Refresh
       run: |
           AUTO_SCALING_GROUP_NAME=$AUTO_SCALING_GROUP_NAME
-          aws autoscaling describe-instance-refreshes --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME
+          while [[ "$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME --query 'InstanceRefreshes[0].Status' --output text)" != "Successful" ]]; do
+            echo "Waiting for instance refresh to complete..."
+            sleep 30
+          done
+
+    - name: Display ASG instance refresh status
+      run: |
+          echo "Instance refresh completed successfully!"
