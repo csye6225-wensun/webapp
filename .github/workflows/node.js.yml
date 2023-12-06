@@ -22,40 +22,40 @@ jobs:
         node-version: [16.x]
 
     steps:
-    # - name: Initialize MySQL
-    #   run: sudo systemctl start mysql.service
+    - name: Initialize MySQL
+      run: sudo systemctl start mysql.service
 
-    # - name: Boost user
-    #   run: |
-    #       mysql -e "ALTER USER '${{ env.DB_USER }}'@'localhost' \
-    #       IDENTIFIED WITH mysql_native_password BY 'root';" \
-    #       -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+    - name: Boost user
+      run: |
+          mysql -e "ALTER USER '${{ env.DB_USER }}'@'localhost' \
+          IDENTIFIED WITH mysql_native_password BY 'root';" \
+          -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
-    # - name: Create database
-    #   run: |
-    #       mysql -e "CREATE DATABASE assignment;" \
-    #       -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+    - name: Create database
+      run: |
+          mysql -e "CREATE DATABASE assignment;" \
+          -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
-    # - name: Create env file
-    #   run: |
-    #       echo "DATABASE_HOST=${{ env.DB_HOST }}
-    #             DATABASE_USER=${{ env.DB_USER }}
-    #             DATABASE_PASSWORD=${{ env.DB_PASSWORD }}
-    #             DATABASE_DB=${{ env.DB_DATABASE }}
-    #             DATABASE_DIALECT=mysql
-    #             LOG_LEVEL=debug
-    #             LOG_FILE_PATH=logs/webapp.log
-    #             REGION=none
-    #             SNS_ARN=arn:aws:sns:us-west-1:656825459572:dev" > /opt/.env
+    - name: Create env file
+      run: |
+          echo "DATABASE_HOST=${{ env.DB_HOST }}
+                DATABASE_USER=${{ env.DB_USER }}
+                DATABASE_PASSWORD=${{ env.DB_PASSWORD }}
+                DATABASE_DB=${{ env.DB_DATABASE }}
+                DATABASE_DIALECT=mysql
+                LOG_LEVEL=debug
+                LOG_FILE_PATH=logs/webapp.log
+                REGION=none
+                SNS_ARN=arn:aws:sns:us-west-1:656825459572:dev" > /opt/.env
 
-    # - uses: actions/checkout@v3
-    # - name: Use Node.js ${{ matrix.node-version }}
-    #   uses: actions/setup-node@v3
-    #   with:
-    #     node-version: ${{ matrix.node-version }}
-    #     cache: 'npm'
-    # - run: npm ci
-    # - run: npm test
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm test
 
     - name: Zip Webapp
       run: zip -r webapp.zip .
