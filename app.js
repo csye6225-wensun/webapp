@@ -10,6 +10,8 @@ const auth = require('./auth');
 const assignment = require('./assignment');
 const statsd = require('./statsd');
 
+const apiVersion = "v1";
+
 // Method Not Allowed
 const methodNotAllowed = (req, res, next) => res.status(405).send();
 
@@ -26,7 +28,7 @@ app.use(function (req, res, next) {
     if (urlArray.length === 4 && urlArray[2] === "assignments") {
         url = `/${urlArray[1]}/${urlArray[2]}/id`
     }
-    const collectApis = ["healthz", "v1", "v2"];
+    const collectApis = ["healthz", apiVersion];
     if (urlArray.length > 1 && collectApis.includes(urlArray[1])) {
         statsd.countAPICalls(method, url);
     }
@@ -37,18 +39,18 @@ app.route(`/healthz`)
     .get(health.getHealthz)
     .all(methodNotAllowed);
 
-app.route(`/v2/assignments/`)
+app.route(`/${apiVersion}/assignments/`)
     .get(auth.authentication(db), assignment.getAssignments(db))
     .post(auth.authentication(db), assignment.postAssignments(db))
     .all(methodNotAllowed);
 
-app.route(`/v2/assignments/:id`)
+app.route(`/${apiVersion}/assignments/:id`)
     .get(auth.authentication(db), assignment.getAssignmentByid(db))
     .delete(auth.authentication(db), assignment.delAssignmentByid(db))
     .put(auth.authentication(db), assignment.putAssignmentByid(db))
     .all(methodNotAllowed);
 
-app.route(`/v1/assignments/:id/submission`)
+app.route(`/${apiVersion}/assignments/:id/submission`)
     .post(auth.authentication(db), assignment.postSubmissions(db))
     .all(methodNotAllowed);
 
