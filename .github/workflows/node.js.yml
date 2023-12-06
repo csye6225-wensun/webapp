@@ -21,7 +21,7 @@ jobs:
       matrix:
         node-version: [16.x]
 
-    # steps:
+    steps:
     # - name: Initialize MySQL
     #   run: sudo systemctl start mysql.service
 

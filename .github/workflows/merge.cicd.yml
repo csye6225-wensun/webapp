@@ -1,10 +1,8 @@
 name: CICD when merge
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
-  # push:
-  #   branches: [ "main" ]
 
 env:
   PACKER_LOG: 1
@@ -22,7 +20,7 @@ jobs:
         node-version: [16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    # steps:
+    steps:
     # - name: Initialize MySQL
     #   run: sudo systemctl start mysql.service
 
