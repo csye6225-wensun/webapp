@@ -72,7 +72,6 @@ jobs:
         aws-region: us-west-1
     
     - name: Get AWS demo account id
-      id: get-account-id
       run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
           echo "AWS Account ID: $ACCOUNT_ID"
@@ -84,3 +83,23 @@ jobs:
           IMAGE_ID=$(aws ec2 describe-images --executable-users $ACCOUNT_ID --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' --output text)
           echo "Latest AMI ID: $IMAGE_ID"
           echo "LATEST_AMI_ID=$IMAGE_ID" >> $GITHUB_ENV
+
+    - name: Get launch template id
+      run: |
+          LAUNCH_TEMPLATE_ID=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names csye6225_asg --query "AutoScalingGroups[0].LaunchTemplate.LaunchTemplateId" --output text)
+          echo "Launch Template ID: $LAUNCH_TEMPLATE_ID"
+          echo "LAUNCH_TEMPLATE_ID=$LAUNCH_TEMPLATE_ID" >> $GITHUB_ENV
+
+    - name: Create a new Launch Template version
+      run: |
+          LAUNCH_TEMPLATE_ID=$LAUNCH_TEMPLATE_ID
+          LATEST_AMI_ID=$LATEST_AMI_ID
+          aws ec2 create-launch-template-version --launch-template-id $LAUNCH_TEMPLATE_ID --version-description "Launch Template new version" --source-version $Latest --launch-template-data "ImageId=$LATEST_AMI_ID"
+    
+    - name: Trigger auto scaling group instance refresh
+      run: |
+          aws autoscaling start-instance-refresh --auto-scaling-group-name csye6225_asg
+
+    - name: Wait for Instance Refresh
+      run: |
+          aws autoscaling describe-instance-refreshes --auto-scaling-group-name csye6225_asg
