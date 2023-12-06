@@ -42,7 +42,7 @@ app.route(`/v2/assignments/`)
     .post(auth.authentication(db), assignment.postAssignments(db))
     .all(methodNotAllowed);
 
-app.route(`/v1/assignments/:id`)
+app.route(`/v2/assignments/:id`)
     .get(auth.authentication(db), assignment.getAssignmentByid(db))
     .delete(auth.authentication(db), assignment.delAssignmentByid(db))
     .put(auth.authentication(db), assignment.putAssignmentByid(db))
