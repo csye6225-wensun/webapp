@@ -73,8 +73,11 @@ jobs:
     
     - name: Get AWS demo account id
       run: |
-          accout_id=$(aws sts get-caller-identity --query 'Account' --output text)
+          ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+          echo "AWS Account ID: $ACCOUNT_ID"
+          echo "::set-output name=account_id::$ACCOUNT_ID"
 
     - name: Get shared images
       run: |
-          aws ec2 describe-images --executable-users $accout_id
+          ACCOUNT_ID=${{ steps.get-account-id.outputs.account_id }}
+          aws ec2 describe-images --executable-users $ACCOUNT_ID
