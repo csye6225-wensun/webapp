@@ -81,4 +81,6 @@ jobs:
     - name: Get shared images
       run: |
           ACCOUNT_ID=$ACCOUNT_ID
-          aws ec2 describe-images --executable-users $ACCOUNT_ID
+          IMAGE_ID=$(aws ec2 describe-images --executable-users $ACCOUNT_ID --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' --output text)
+          echo "Latest AMI ID: $IMAGE_ID"
+          echo "LATEST_AMI_ID=$IMAGE_ID" >> $GITHUB_ENV
