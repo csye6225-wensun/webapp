@@ -10,7 +10,7 @@ const auth = require('./auth');
 const assignment = require('./assignment');
 const statsd = require('./statsd');
 
-const apiVersion = "v1";
+const apiVersion = "demo";
 
 // Method Not Allowed
 const methodNotAllowed = (req, res, next) => res.status(405).send();
